@@ -35,10 +35,10 @@ st.title('Recipe Genie Pad')
 st.write('$$Your$$ $$Wish$$ $$Is$$ $$My$$ $$Command$$ **😋**')
 np.set_printoptions(suppress=True)
 # Load the model
-model = load_model("C:\Projects\Bon Hackathon\model.h5", compile=False)
+model = load_model("model.h5", compile=False)
 
 # Load the labels
-class_names = open("C:\Projects\Bon Hackathon\labels.txt", "r").readlines()
+class_names = open("labels.txt", "r").readlines()
 
 
 data = np.ndarray(shape=(1, 299, 299, 3), dtype=np.float32)
