@@ -15,7 +15,7 @@ import os
 import webbrowser
 import base64
 
-image_file = 'kitchen-7870212.jpg'
+image_file = 'background.jpg'
 
 with open(image_file, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
