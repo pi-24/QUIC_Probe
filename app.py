@@ -85,13 +85,12 @@ if uploaded_file is not None:
         st.write(f'Blog')
         if st.button(f'Blog'):
             webbrowser.open(blog_url)
-        
+    
+    # Create a new instance of the Chrome driver    
+    driver = webdriver.Chrome(executable_path="chromedriver.exe")    
     st.header(f"$$Not$$ in mood to $$Cook$$,")
     st.write(f"**Don't worry we got you Bro!**")
     if st.button(f'Order $${foodname}$$ now!'):
-        # Create a new instance of the Chrome driver
-        
-        driver = webdriver.Chrome(executable_path="chromedriver.exe")
         
         driver.get("https://www.swiggy.com/")
         # Wait for the page to load
