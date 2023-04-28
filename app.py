@@ -15,7 +15,7 @@ import os
 import webbrowser
 import base64
 
-image_file = 'background.jpg'
+image_file = 'kitchen-7870212.jpg'
 
 with open(image_file, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
@@ -85,13 +85,12 @@ if uploaded_file is not None:
         st.write(f'Blog')
         if st.button(f'Blog'):
             webbrowser.open(blog_url)
-    
-    # Create a new instance of the Chrome driver    
-    driver = webdriver.Chrome(executable_path="chromedriver.exe")    
+        
     st.header(f"$$Not$$ in mood to $$Cook$$,")
     st.write(f"**Don't worry we got you Bro!**")
     if st.button(f'Order $${foodname}$$ now!'):
-        
+        # Launch the Chrome browser and navigate to Swiggy
+        driver = webdriver.Chrome(executable_path="chromedriver.exe")
         driver.get("https://www.swiggy.com/")
         # Wait for the page to load
         time.sleep(5)
@@ -114,6 +113,8 @@ if uploaded_file is not None:
     st.write(f'**$$Donate$$** Today and $$Save$$ $$Lives$$!')
     st.write("Wastage for you is one time meal for someone else.")
     if st.button(f'Donate Leftover Food!'):
+        # Create a new instance of the Chrome driver
+        driver = webdriver.Chrome(executable_path="chromedriver.exe")
         # Navigate to Google
         driver.get("https://www.google.com")
 
@@ -148,7 +149,3 @@ if uploaded_file is not None:
     st.write("- Compost food scraps to reduce waste")
     
     st.write("By following these tips, we can help reduce food waste and make the most of the food we have.") 
-
-    
-
-    
