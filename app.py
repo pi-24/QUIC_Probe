@@ -89,8 +89,10 @@ if uploaded_file is not None:
     st.header(f"$$Not$$ in mood to $$Cook$$,")
     st.write(f"**Don't worry we got you Bro!**")
     if st.button(f'Order $${foodname}$$ now!'):
-        # Launch the Chrome browser and navigate to Swiggy
-        driver = webdriver.Chrome()
+        # Create a new instance of the Chrome driver
+        
+        driver = webdriver.Chrome(executable_path="chromedriver.exe")
+        
         driver.get("https://www.swiggy.com/")
         # Wait for the page to load
         time.sleep(5)
@@ -113,9 +115,6 @@ if uploaded_file is not None:
     st.write(f'**$$Donate$$** Today and $$Save$$ $$Lives$$!')
     st.write("Wastage for you is one time meal for someone else.")
     if st.button(f'Donate Leftover Food!'):
-        # Create a new instance of the Chrome driver
-        driver = webdriver.Chrome()
-
         # Navigate to Google
         driver.get("https://www.google.com")
 
