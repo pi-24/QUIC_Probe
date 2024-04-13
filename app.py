@@ -2,6 +2,7 @@ from keras.models import load_model
 from PIL import Image, ImageOps  
 import numpy as np
 import streamlit as st
+import pandas as pd
 import streamlit.components.v1 as com
 from PIL import Image
 import time
@@ -31,8 +32,8 @@ st.markdown(
     unsafe_allow_html=True
     )
 
-st.title('Recipe Genie Pad')
-st.write('$$Your$$ $$Wish$$ $$Is$$ $$My$$ $$Command$$ **😋**')
+st.title('QUIC Probe')
+st.write('$$Network$$ $$Traffic$$ $$Classification$$ $$Tool$$')
 np.set_printoptions(suppress=True)
 # Load the model
 model = load_model("model.h5", compile=False)
@@ -40,25 +41,15 @@ model = load_model("model.h5", compile=False)
 # Load the labels
 class_names = open("labels.txt", "r").readlines()
 
-
-data = np.ndarray(shape=(1, 299, 299, 3), dtype=np.float32)
-# Upload the Image for model
-uploaded_file = st.file_uploader('Upload an Image of your $$Desired$$ $$Dish$$')
+# Upload the CSV file
+uploaded_file = st.file_uploader('Upload a CSV file of your network traffic', type=['csv'])
 if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image,caption='Uploaded Dish')
-    # resizing the image to 299x299 
-    size = (299, 299)
-    image = ImageOps.fit(image, size, Image.Resampling.LANCZOS)
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(uploaded_file)
+    st.write(df)  # Optionally, display the DataFrame
 
-    # turn the image into a numpy array
-    image_array = np.asarray(image)
-
-    # Normalize the image
-    normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
-
-    # Load the image into the array
-    data[0] = normalized_image_array
+    # Convert DataFrame to numpy array
+    data = df.to_numpy(dtype=np.float32)
 
     # Predicts the model
     prediction = model.predict(data)
