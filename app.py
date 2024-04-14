@@ -34,7 +34,7 @@ st.markdown(
     )
 
 st.title('QUIC Probe')
-st.write('$$Network$$  $$Traffic$$  $$Classification$$  $$Tool$$')
+st.write("Network Traffic Classification Tool")
 np.set_printoptions(suppress=True)
 # Load the model
 model_path = 'finalized_model_lgbm.sav'
