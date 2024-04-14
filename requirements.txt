@@ -6,3 +6,4 @@ selenium
 lightgbm
 joblib
 pandas
+matplotlib
