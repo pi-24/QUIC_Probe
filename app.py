@@ -1,21 +1,12 @@
-from keras.models import load_model  
-from PIL import Image, ImageOps  
-import numpy as np
 import streamlit as st
 import pandas as pd
-import streamlit.components.v1 as com
-from PIL import Image
-import time
+from collections import Counter
+import joblib
 import numpy as np
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
-import keyboard
-import os
-import webbrowser
+import matplotlib.pyplot as plt
 import base64
-import pickle
+import io
+
 
 image_file = 'background.jpg'
 
@@ -33,48 +24,76 @@ st.markdown(
     unsafe_allow_html=True
     )
 
-st.title('QUIC Probe')
-st.write("Network Traffic Classification Tool")
-np.set_printoptions(suppress=True)
-# Load the model
-model_path = 'finalized_model_lgbm.sav'
-with open(model_path, 'rb') as file:
-    model = pickle.load(file)
-# Load the labels
-class_names = open("labels.txt", "r").readlines()
 
-# Upload the CSV file
-uploaded_file = st.file_uploader('Upload a CSV file of your network traffic', type=['csv'])
-if uploaded_file is not None:
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(uploaded_file)
-    st.write(df)  # Optionally, display the DataFrame
+# Load the saved model
+loaded_model = joblib.load('traffic_classifier.pkl')
 
-    # Convert DataFrame to numpy array
-    data = df.to_numpy(dtype=np.float32)
-
-    # Predicts the model
-    prediction = model.predict(data)
-    index = np.argmax(prediction)
-    class_name = class_names[index]
-    confidence_score = prediction[0][index]
-    trafficname = class_name[2:].strip()
-    # Display the predicted Traffic Name with Confidence Score
-    st.write(f'The Prediction is: $${trafficname}$$')
-    st.write(f'Confidence %:', (confidence_score*100).round(3))
-    # Useing Webscrap url to open the links
-    youtube_url = f"https://www.youtube.com/watch?v=HnDsMehSSY4"
-    blog_url = f"https://www.chromium.org/quic/"
+def predict_traffic(test_data):
     
+    if test_data.empty:
+        return {}
+    # Prepare the test data
+    X_test = test_data[['relativetime', 'packetsize', 'packetdirection']]
     
-    st.header(f'What QUIC is :')
-    col11, col12 = st.columns(2)
-    with col11:
-        st.write(f'Video')
-        if st.button(f'Youtube'):
-            webbrowser.open(youtube_url)
+    # Make predictions
+    predictions = loaded_model.predict(X_test)
+    
+    # Calculate prediction accuracy rates
+    total_predictions = len(predictions)
+    class_counts = Counter(predictions)
+    class_accuracy_rates = {class_name: count / total_predictions for class_name, count in class_counts.items()}
+    
+    return class_accuracy_rates
 
-    with col12:
-        st.write(f'Blog')
-        if st.button(f'Blog'):
-            webbrowser.open(blog_url)
+def plot_accuracy_rates(accuracy_rates):
+    classes = ['Google Search', 'Google Drive', 'Google Music', 'YouTube', 'Google Docs']
+    rates = [accuracy_rates.get(i, 0) for i in range(5)]
+    
+    fig, ax = plt.subplots()
+    ax.bar(classes, rates)
+    ax.set_ylabel('Accuracy Rate')
+    ax.set_xlabel('Traffic Type')
+    ax.set_title('Prediction Accuracy Rates')
+    plt.xticks(rotation=45)
+    st.pyplot(fig)
+
+def main():
+    st.title('Traffic Classifier App')
+    st.sidebar.title('File Selection')
+    
+    test_cases = ['GoogleDoc-3.txt', 'GoogleDrive-test1.txt', 'GoogleMusic-8.txt', 'GoogleSearch-7.txt', 'Youtube-20.txt']
+    selected_option = st.sidebar.radio('Select a file or upload your own', ('Choose a test file', 'Upload a file'))
+    
+    if selected_option == 'Choose a test file':
+        selected_file = st.sidebar.selectbox('Select a test file', test_cases)
+        test_data = pd.read_csv(selected_file, header=None, sep='\t', names=['timestamp', 'relativetime', 'packetsize', 'packetdirection'])
+        st.subheader("Data sample:")
+        st.dataframe(test_data.head())
+        
+    else:
+        uploaded_file = st.sidebar.file_uploader('Upload a .txt file', type='txt')
+        if uploaded_file is not None:
+            # Read the contents of the uploaded file
+            content = uploaded_file.getvalue()
+            # Create a file-like object from the content
+            file_obj = io.StringIO(content.decode('utf-8'))
+            test_data = pd.read_csv(file_obj, header=None, sep='\t', names=['timestamp', 'relativetime', 'packetsize', 'packetdirection'])
+            st.subheader("Data sample:")
+            st.dataframe(test_data.head())
+            # print(test_data.head())
+    
+    if st.button('Run Prediction'):
+        accuracy_rates = predict_traffic(test_data)
+        st.write('Prediction Accuracy Rates:')
+        max_accuracy = max(accuracy_rates.values())
+        for class_no, accuracy_rate in accuracy_rates.items():
+            class_name = ['Google Search', 'Google Drive', 'Google Music', 'YouTube', 'Google Docs'][class_no]
+            if accuracy_rate == max_accuracy:
+                st.markdown(f'<span style="background-color:#009900; padding: 5px">{class_name}: {accuracy_rate:.2f}</span>', unsafe_allow_html=True)
+            else:
+                st.markdown(f'<span style="background-color:#990000; padding: 5px">{class_name}: {accuracy_rate:.2f}</span>', unsafe_allow_html=True)
+        
+        plot_accuracy_rates(accuracy_rates)
+
+if __name__ == '__main__':
+    main()
