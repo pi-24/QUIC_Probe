@@ -1,20 +1,5 @@
-0 Burger
-1 Butter Naan
-2 Chai
-3 Chapati
-4 Chole Bhature
-5 Dal Makhani
-6 Dhokla
-7 Fried Rice
-8 Idli
-9 Jalebi
-10 Kaathi Rolls
-11 Kadai Paneer
-12 Kulfi
-13 Masala Dosa
-14 Momos
-15 Paani Puri
-16 Pakode
-17 Pav Bhaji
-18 Pizza
-19 Samosa
+0 Google Doc
+1 Google Drive
+2 Google Music
+3 Google Search
+4 Youtube
