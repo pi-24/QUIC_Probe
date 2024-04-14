@@ -2,7 +2,6 @@ scikit-learn
 numpy
 streamlit
 keyboard
-selenium
 lightgbm
 joblib
 pandas
