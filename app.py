@@ -15,6 +15,7 @@ import keyboard
 import os
 import webbrowser
 import base64
+import pickle
 
 image_file = 'background.jpg'
 
@@ -36,7 +37,7 @@ st.title('QUIC Probe')
 st.write('$$Network$$  $$Traffic$$  $$Classification$$  $$Tool$$')
 np.set_printoptions(suppress=True)
 # Load the model
-model = load_model("finalized_model_lgbm.sav", compile=False)
+model = pickle.load(open('finalized_model_lgbm.sav',compile=False))
 
 # Load the labels
 class_names = open("labels.txt", "r").readlines()
