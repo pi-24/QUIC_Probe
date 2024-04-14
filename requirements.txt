@@ -4,4 +4,3 @@ streamlit
 keyboard
 selenium
 lightgbm
-scikit-learn
