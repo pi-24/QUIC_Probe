@@ -4,4 +4,4 @@ streamlit
 keyboard
 selenium
 lightgbm
-sklearn
+scikit-learn
