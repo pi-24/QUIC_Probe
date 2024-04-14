@@ -37,8 +37,8 @@ st.title('QUIC Probe')
 st.write('$$Network$$  $$Traffic$$  $$Classification$$  $$Tool$$')
 np.set_printoptions(suppress=True)
 # Load the model
-model = pickle.load(open('finalized_model_lgbm.sav',compile=False))
-
+with open('finalized_model_lgbm.sav', 'rb') as file:
+    model = pickle.load(file)
 # Load the labels
 class_names = open("labels.txt", "r").readlines()
 
