@@ -7,21 +7,21 @@ import matplotlib.pyplot as plt
 import base64
 import io
 
-# Background Image
 image_file = 'background.jpg'
+
 with open(image_file, "rb") as image_file:
-    encoded_string = base64.b64encode(image_file.read())
+        encoded_string = base64.b64encode(image_file.read())
 st.markdown(
     f"""
     <style>
     .stApp {{
-        background-image: url(data:image/{{"png"}};base64,{encoded_string.decode()});
+        background-image: url(data:image/{"png"};base64,{encoded_string.decode()});
         background-size: cover
     }}
     </style>
     """,
     unsafe_allow_html=True
-)
+    )
 
 # Load the saved model
 loaded_model = joblib.load('traffic_classifier.pkl')
